@@ -1,33 +1,13 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserController } from "./user.controller";
-import { UserService } from "./user.service";
-import { TokenService } from "src/auth/token/token.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "./entities/user.entity";
-import { forwardRef } from "@nestjs/common";
 import { AuthModule } from "src/auth/auth.module";
-import { AppModule } from "src/app.module";
 import { RequestType } from "src/types/RequestType";
 import { EditUserDto } from "./dtos/EditUserDto";
-import { first } from "rxjs";
-import exp from "constants";
+import { UserController } from "./user.controller";
+import { UserService } from "./user.service";
+import { mockUserService } from "./user.service.spec";
 
 describe("UserController", () => {
     let controller: UserController;
-    const mockUserService = {
-        editUser: jest.fn((_id: number, dto: EditUserDto) => ({
-            _id, ...dto, password: String(Math.random())
-        })),
-        getUserData: jest.fn((_id: number) => (
-            {
-                _id,
-                firstName: String(Math.random()),
-                lastName: String(Math.random()),
-                email: String(Math.random()),
-                password: String(Math.random())
-            }
-        ))
-    };
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +23,7 @@ describe("UserController", () => {
         expect(controller).toBeDefined();
     })
 
-    it("user should be created", () => {
+    it("user should be edited", async () => {
         const dto: EditUserDto = {
             firstName: "Danil",
             lastName: "Bashirov",
@@ -55,7 +35,7 @@ describe("UserController", () => {
                 email: "test@test.ru"
             },
         }
-        expect(controller.editUser(request as RequestType, dto)).toEqual({
+        expect(await controller.editUser(request as RequestType, dto)).toEqual({
             _id: request.user._id,
             ...dto,
             password: expect.any(String)
@@ -78,6 +58,6 @@ describe("UserController", () => {
             password: expect.any(String)
         })
 
-        expect(mockUserService.getUserData).toHaveBeenCalledWith(request.user._id);
+        expect(mockUserService.findUserById).toHaveBeenCalledWith(request.user._id);
     })
 })
