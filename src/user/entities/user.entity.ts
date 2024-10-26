@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Image } from "src/images/images.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
 export class User {
@@ -23,6 +24,11 @@ export class User {
     @ApiProperty({title: "User Phone Number", example: "0909090909"})
     @Column({unique: true, nullable: true, type: "bigint"})
     public phoneNumber: number;
+
+    @ApiProperty({title: "User avatar", type: () => Image})
+    @OneToOne(() => Image, {eager: true, onDelete: "SET NULL"})
+    @JoinColumn()
+    public image: Image;
 
     @ApiProperty({title: "User Password", example: "hashed"})
     @Column()

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, InsertResult, Repository } from "typeorm";
 import { Image } from "./images.entity";
@@ -11,7 +11,7 @@ import { ImageDto } from "./dtos/image-dto";
 export class ImageService {
     constructor(
         @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
-        private readonly userService: UserService
+        @Inject(forwardRef(() => UserService)) private readonly userService: UserService
     ) { }
 
     async uploadImages(userId: number, filenames: string[]): Promise<ImageDto[]> {
@@ -20,21 +20,15 @@ export class ImageService {
     }
 
     async uploadImage(user: User, filename: string): Promise<ImageDto> {
-        const imageCreatedInsertResult: InsertResult = await this.imageRepository.createQueryBuilder().insert().into(Image).values({
+        const imageCreated: Image = await this.imageRepository.save({
             user,
             filename
-        }).execute()
+        });
 
-        console.log(imageCreatedInsertResult);
-
-        const imageCreatedFound: Image = await this.imageRepository.findOneBy({
-            _id: imageCreatedInsertResult.identifiers[0].id
-        })
-
-        return new ImageDto(imageCreatedFound);
+        return new ImageDto(imageCreated);
     }
 
-    async deleteImage(userId: number, filename: string) {
+    async deleteImage(userId: number, filename: string): Promise<boolean> {
         const imageDeletedResult: DeleteResult = await this.imageRepository.delete({
             user: {
                 _id: userId
@@ -49,5 +43,11 @@ export class ImageService {
         fs.unlinkSync(`./uploads/pictures/${filename}`);
 
         return true;
+    }
+
+    async findImage(filename: string): Promise<Image> {
+        return await this.imageRepository.findOneBy({
+            filename
+        });
     }
 }

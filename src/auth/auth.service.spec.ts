@@ -1,13 +1,12 @@
+import { UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { AuthService } from "./auth.service"
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from "src/user/dtos/CreateUserDto";
 import { UserModule } from "src/user/user.module";
 import { UserService } from "src/user/user.service";
 import { mockUserService } from "src/user/user.service.spec";
-import { CreateUserDto } from "src/user/dtos/CreateUserDto";
-import * as bcrypt from 'bcrypt';
-import { User } from "src/user/entities/user.entity";
+import { AuthService } from "./auth.service";
 import { LoginDto } from "./dtos/login-dto";
-import { UnauthorizedException } from "@nestjs/common";
 
 const mockAuthService = {
     signUp: jest.fn().mockImplementation((dto: CreateUserDto) => ({
@@ -66,6 +65,7 @@ const mockAuthService = {
                 _id: Math.random(),
                 firstName: String(Math.random()),
                 lastName: String(Math.random()),
+                image: new Image(),
                 email: dto.email,
                 phoneNumber: Date.now() + 10,
                 password: bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10, "a"))

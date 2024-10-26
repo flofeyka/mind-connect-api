@@ -8,7 +8,7 @@ import { AuthModule } from "src/auth/auth.module";
 
 @Module({
     controllers: [ImageController],
-    imports: [TypeOrmModule.forFeature([Image]), forwardRef(() => UserModule), AuthModule],
+    imports: [TypeOrmModule.forFeature([Image]), forwardRef(() => UserModule), forwardRef(() => AuthModule)],
     providers: [ImageService],
     exports: [ImageService]
 })

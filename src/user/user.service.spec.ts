@@ -2,6 +2,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { User } from "./entities/user.entity";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dtos/CreateUserDto";
+import { EditUserDto } from "./dtos/EditUserDto";
+import { Image } from "src/images/images.entity";
 
 export const mockUserService = {
     createUser: jest.spyOn(UserService.prototype, "createUser").mockResolvedValue({
@@ -30,10 +32,11 @@ export const mockUserService = {
         } as User
     }),
 
-    editUser: jest.spyOn(UserService.prototype, "editUser").mockImplementation(async (_id: number, dto: CreateUserDto) => {
+    editUser: jest.spyOn(UserService.prototype, "editUser").mockImplementation(async (_id: number, dto: EditUserDto) => {
         return {
             _id,
             ...dto,
+            image: new Image(),
             password: String(Math.random())
         } as User
     })
