@@ -9,10 +9,6 @@ import { User } from "./entities/user.entity";
 export class UserService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-    public async getUserData(_id: number): Promise<User> {
-        return await this.userRepository.findOneBy({_id});
-    }
-
     public async editUser(_id: number, userDto: EditUserDto): Promise<User> {
         const user: User = await this.userRepository.findOneBy({_id});
 
