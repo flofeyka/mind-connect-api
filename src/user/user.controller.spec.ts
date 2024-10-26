@@ -27,7 +27,8 @@ describe("UserController", () => {
         const dto: EditUserDto = {
             firstName: "Danil",
             lastName: "Bashirov",
-            email: "userDto@test.ru"
+            email: "userDto@test.ru",
+            image: "test.jpg"
         }
         const request = {
             user: {

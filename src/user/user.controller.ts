@@ -5,6 +5,7 @@ import { RequestType } from "src/types/RequestType";
 import { EditUserDto } from "./dtos/EditUserDto";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "./entities/user.entity";
+import { UserOutputDto } from "./dtos/UserOutputDto";
 
 
 @ApiTags("User API")
@@ -14,7 +15,7 @@ export class UserController {
 
     @ApiOperation({summary: "Get user data"})
     @ApiBearerAuth("Access token")
-    @ApiResponse({status: 200, type: User})
+    @ApiResponse({status: 200, type: UserOutputDto})
     @Get("/")
     @UseGuards(AuthGuard)
     async getUserData(@Request() req: RequestType) {
@@ -22,11 +23,12 @@ export class UserController {
     }
 
     @ApiOperation({summary: "Update user data"})
-    @ApiBearerAuth("Access token")
-    @ApiResponse({status: 200, type: User})
+    @ApiBearerAuth()
+    @ApiResponse({status: 200, type: UserOutputDto})
     @Put("/")
     @UseGuards(AuthGuard)
     editUser(@Request() req: RequestType, @Body() userDto: EditUserDto) {
         return this.userService.editUser(req.user._id, userDto);
     }
+
 }

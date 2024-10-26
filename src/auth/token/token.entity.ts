@@ -10,7 +10,7 @@ export class Token {
     @Column()
     public token: string;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { onUpdate: "CASCADE" })
     @JoinColumn()
     public readonly user: User;
 }

@@ -39,7 +39,6 @@ export class ImageController {
     }))
     @UseGuards(AuthGuard)
     uploadImages(@UploadedFiles() files: Express.Multer.File[], @Req() request: RequestType) {
-        console.log(files);
         return this.imagesService.uploadImages(request.user._id, files.map(file => file.filename));
     }
 

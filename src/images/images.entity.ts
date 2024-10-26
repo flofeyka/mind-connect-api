@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,7 +10,8 @@ export class Image {
     @Column({unique: true})
     public readonly filename: string;
 
-    @ManyToOne(() => User)
+    @ApiProperty({name: "user", description: "User", example: () => User})
+    @ManyToOne(() => User, {onUpdate: "CASCADE", cascade: true})
     @JoinColumn()
     public readonly user: User;
 }
