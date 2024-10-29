@@ -21,7 +21,7 @@ export class UserOutputDto {
         this.email = user.email;
         this.firstName = user.firstName;
         this.lastName = user.lastName;
-        this.phoneNumber = user.phoneNumber;
+        this.phoneNumber = user?.phoneNumber;
         this.image = new ImageDto(user.image);
     }
 }

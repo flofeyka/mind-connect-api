@@ -10,16 +10,10 @@ import { AuthService } from "./auth.service"
 import { TokenService } from "./token/token.service"
 import { CreateUserDto } from "src/user/dtos/CreateUserDto"
 import { User } from "src/user/entities/user.entity"
+import { mockAuthService } from "./auth.service.spec"
 
 describe('AuthController', () => {
     let authController: AuthController;
-
-    const mockAuthService = {
-        signUp: jest.fn((dto: CreateUserDto) => ({
-            ...dto
-        }))
-    }
-
     const mockUserRepository = {}
     const mockTokenRepository = {}
 
@@ -47,7 +41,7 @@ describe('AuthController', () => {
                 }
             ],
             exports: [TokenService]
-        }).compile();
+        }).overrideProvider(AuthService).useValue(mockAuthService).compile();
 
         authController = module.get<AuthController>(AuthController);
     })
