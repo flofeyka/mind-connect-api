@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mindconnect-api
+spec:
+  selector:
+    matchLabels:
+      app: mindconnect-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mindconnect-api
+    spec:
+      containers:
+        - name: mindconnect-api
+          image: flofeyka/mindconnect-api
+          ports:
+            - containerPort: 3000

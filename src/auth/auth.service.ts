@@ -5,12 +5,13 @@ import { TokenService } from "./token/token.service";
 import { User } from "src/user/entities/user.entity";
 import { LoginDto } from "./dtos/login-dto";
 import * as bcrypt from 'bcrypt';
+import { AuthOutputDto } from "./dtos/auth-output-dto";
 
 @Injectable()
 export class AuthService {
     constructor(private readonly userService: UserService, private readonly tokenService: TokenService) {}
 
-    async signUp(createUserDto: CreateUserDto): Promise<{token: string, user: User}> {
+    async signUp(createUserDto: CreateUserDto): Promise<AuthOutputDto> {
         const userExisted: User | null = await this.userService.findUserByEmail(createUserDto.email);
         if (userExisted) {
             throw new BadRequestException('User already existed');
@@ -24,13 +25,10 @@ export class AuthService {
 
 
         //should return user-dto and token
-        return {
-            user: userCreated,
-            token
-        };
+        return new AuthOutputDto({user: userCreated, token: token})
     }
 
-    async signIn(loginDto: LoginDto) {
+    async signIn(loginDto: LoginDto): Promise<AuthOutputDto> {
         const userExisted: User | null = await this.userService.findUserByEmail(loginDto.email);
         if (!userExisted) {
             throw new UnauthorizedException('Wrong email or password');
@@ -44,10 +42,7 @@ export class AuthService {
         const token: string = await this.tokenService.saveToken(userExisted);
 
         //should return user-dto and token
-        return {
-            user: userExisted,
-            token
-        };
+        return new AuthOutputDto({user: userExisted, token});
         
     }
 };

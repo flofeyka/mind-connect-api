@@ -7,7 +7,7 @@ export class User {
 
     @ApiProperty({title: "User ID", example: 1})
     @PrimaryGeneratedColumn()
-    public readonly _id: number;
+    public _id: number;
 
     @ApiProperty({title: "User First Name", example: "John"})
     @Column()

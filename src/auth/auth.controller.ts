@@ -13,14 +13,14 @@ export class AuthController {
     @ApiOperation({summary: "Sign up"})
     @ApiResponse({status: 200, type: AuthOutputDto})
     @Post("/sign-up")
-    async signUp(@Body() userDto: CreateUserDto) {
-        return await this.authService.signUp(userDto);
+    signUp(@Body() userDto: CreateUserDto): Promise<AuthOutputDto> {
+        return this.authService.signUp(userDto);
     }
 
     @ApiOperation({summary: "Sign in"})
     @ApiResponse({status: 200, type: AuthOutputDto})
     @Post("/sign-in")
-    async signIn(@Body() userDto: LoginDto) {
-        return await this.authService.signIn(userDto);
+    signIn(@Body() userDto: LoginDto): Promise<AuthOutputDto> {
+        return this.authService.signIn(userDto);
     }
 };

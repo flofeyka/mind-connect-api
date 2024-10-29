@@ -4,6 +4,7 @@ import { UserService } from "./user.service";
 import { CreateUserDto } from "./dtos/CreateUserDto";
 import { EditUserDto } from "./dtos/EditUserDto";
 import { Image } from "src/images/images.entity";
+import { UserOutputDto } from "./dtos/UserOutputDto";
 
 export const mockUserService = {
     createUser: jest.spyOn(UserService.prototype, "createUser").mockResolvedValue({
@@ -23,22 +24,22 @@ export const mockUserService = {
     } as User),
 
     findUserById: jest.spyOn(UserService.prototype, "findUserById").mockImplementation(async (_id: number) => {
-        return {
+        const user: User = new User();
+        Object.assign(user, {
             _id,
             firstName: String(Math.random()),
             lastName: String(Math.random()),
             email: String(Math.random()),
-            password: String(Math.random())
-        } as User
+        })
+
+        return user;
     }),
 
-    editUser: jest.spyOn(UserService.prototype, "editUser").mockImplementation(async (_id: number, dto: EditUserDto) => {
-        return {
-            _id,
-            ...dto,
-            image: new Image(),
-            password: String(Math.random())
-        } as User
+    editUser: jest.spyOn(UserService.prototype, "editUser").mockImplementation(async (_id: number, userDto: EditUserDto) => {
+        const user = new User();
+        Object.assign(user, {_id, ...userDto});
+
+        return user;
     })
 }
 

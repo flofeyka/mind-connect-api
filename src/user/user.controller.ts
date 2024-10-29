@@ -10,11 +10,11 @@ import { UserOutputDto } from "./dtos/UserOutputDto";
 
 @ApiTags("User API")
 @Controller("/user")
+@ApiBearerAuth()
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @ApiOperation({summary: "Get user data"})
-    @ApiBearerAuth("Access token")
     @ApiResponse({status: 200, type: UserOutputDto})
     @Get("/")
     @UseGuards(AuthGuard)
@@ -23,7 +23,6 @@ export class UserController {
     }
 
     @ApiOperation({summary: "Update user data"})
-    @ApiBearerAuth()
     @ApiResponse({status: 200, type: UserOutputDto})
     @Put("/")
     @UseGuards(AuthGuard)

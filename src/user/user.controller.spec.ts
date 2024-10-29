@@ -5,6 +5,9 @@ import { EditUserDto } from "./dtos/EditUserDto";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { mockUserService } from "./user.service.spec";
+import { UserDto } from "./dtos/UserDto";
+import { UserOutputDto } from "./dtos/UserOutputDto";
+import { User } from "./entities/user.entity";
 
 describe("UserController", () => {
     let controller: UserController;
@@ -28,6 +31,7 @@ describe("UserController", () => {
             firstName: "Danil",
             lastName: "Bashirov",
             email: "userDto@test.ru",
+
             image: "test.jpg"
         }
         const request = {
@@ -39,7 +43,6 @@ describe("UserController", () => {
         expect(await controller.editUser(request as RequestType, dto)).toEqual({
             _id: request.user._id,
             ...dto,
-            password: expect.any(String)
         })
 
         expect(mockUserService.editUser).toHaveBeenCalledWith(request.user._id, dto);
