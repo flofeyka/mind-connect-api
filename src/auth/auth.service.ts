@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { CreateUserDto } from "src/user/dtos/CreateUserDto";
-import { UserService } from "src/user/user.service";
-import { TokenService } from "./token/token.service";
-import { User } from "src/user/entities/user.entity";
-import { LoginDto } from "./dtos/login-dto";
-import * as bcrypt from 'bcrypt';
-import { AuthOutputDto } from "./dtos/auth-output-dto";
-import { ResetPasswordToken } from "./token/ResetPasswordToken.entity";
-import { UserOutputDto } from "src/user/dtos/UserOutputDto";
 import { MailerService } from "@nestjs-modules/mailer";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from "src/user/dtos/CreateUserDto";
+import { User } from "src/user/entities/user.entity";
+import { UserService } from "src/user/user.service";
+import { AuthOutputDto } from "./dtos/auth-output-dto";
+import { LoginDto } from "./dtos/login-dto";
+import { ResetPasswordToken } from "./token/ResetPasswordToken.entity";
+import { TokenService } from "./token/token.service";
+import { Token } from "./token/token.entity";
 
 @Injectable()
 export class AuthService {
@@ -34,8 +34,6 @@ export class AuthService {
         });
         await this.tokenService.saveToken(refreshToken);
 
-
-        //should return user-dto and token
         return new AuthOutputDto({ user: userCreated, refreshToken, accessToken })
     }
 
@@ -56,15 +54,29 @@ export class AuthService {
         })
         await this.tokenService.saveToken(refreshToken);
 
-        //should return user-dto and token
         return new AuthOutputDto({ user: userExisted, accessToken, refreshToken });
+    }
+
+    async refreshToken(currentRefreshToken: string = ""): Promise<AuthOutputDto> {
+        const tokenData: Token = await this.tokenService.findRefreshToken(currentRefreshToken);
+        if (!tokenData) {
+            throw new UnauthorizedException("Wrong refresh token");
+        }
+        const { accessToken, refreshToken } = this.tokenService.generateTokens({
+            _id: tokenData.user._id,
+            email: tokenData.user.email
+        });
+        await this.tokenService.saveToken(refreshToken);
+
+        return new AuthOutputDto({ user: tokenData.user, refreshToken, accessToken});
+
     }
 
     async logout(refreshToken: string): Promise<boolean> {
         return await this.tokenService.deleteToken(refreshToken);
     }
 
-    async requestPasswordReset(email: string, host: string) {
+    async requestPasswordReset(email: string, host: string): Promise<boolean> {
         const existedUser: User = await this.userService.findUserByEmail(email);
 
         if (!existedUser) {
@@ -87,7 +99,7 @@ export class AuthService {
         return true;
     }
 
-    async resetPassword(token: string, password: string) {
+    async resetPassword(token: string, password: string): Promise<boolean> {
         const tokenFound: ResetPasswordToken = await this.tokenService.findResetPasswordToken(token);
         if (!tokenFound) {
             throw new NotFoundException("Token is not found");
