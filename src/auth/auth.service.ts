@@ -21,7 +21,7 @@ export class AuthService {
     async signUp(createUserDto: CreateUserDto): Promise<AuthOutputDto> {
         const userExisted: User | null = await this.userService.findUserByEmail(createUserDto.email);
         if (userExisted) {
-            throw new BadRequestException('User already existed');
+            throw new BadRequestException('User with this email already exists');
         }
 
         const salt: string = await bcrypt.genSalt(10, "a");
@@ -61,7 +61,6 @@ export class AuthService {
     }
 
     async logout(refreshToken: string): Promise<boolean> {
-        console.log(refreshToken);
         return await this.tokenService.deleteToken(refreshToken);
     }
 
@@ -69,7 +68,7 @@ export class AuthService {
         const existedUser: User = await this.userService.findUserByEmail(email);
 
         if (!existedUser) {
-            throw new BadRequestException("Account with this email isn't existing");
+            throw new NotFoundException("Account with this email isn't existing");
         }
 
         const tokenModelGenerated: ResetPasswordToken = await this.tokenService.generateResetPasswordToken(existedUser);
@@ -100,6 +99,7 @@ export class AuthService {
         }
 
         await this.userService.changePassword(tokenFound.user._id, password);
+        await this.tokenService.deleteResetPasswordToken(tokenFound.token);
 
         return true;
     }
