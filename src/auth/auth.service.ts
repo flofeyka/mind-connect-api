@@ -6,7 +6,7 @@ import { User } from "src/user/entities/user.entity";
 import { LoginDto } from "./dtos/login-dto";
 import * as bcrypt from 'bcrypt';
 import { AuthOutputDto } from "./dtos/auth-output-dto";
-import { ResetPasswordToken } from "./token/resetPasswordToken.entity";
+import { ResetPasswordToken } from "./token/ResetPasswordToken.entity";
 import { UserOutputDto } from "src/user/dtos/UserOutputDto";
 import { MailerService } from "@nestjs-modules/mailer";
 

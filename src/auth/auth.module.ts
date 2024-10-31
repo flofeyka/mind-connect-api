@@ -7,7 +7,7 @@ import { TokenService } from "./token/token.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Token } from "./token/token.entity";
 import { AppModule } from "src/app.module";
-import { ResetPasswordToken } from "./token/resetPasswordToken.entity";
+import { ResetPasswordToken } from "./token/ResetPasswordToken.entity";
 
 @Module({
     imports: [
