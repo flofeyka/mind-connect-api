@@ -78,7 +78,7 @@ export class TokenService {
     async generateResetPasswordToken(user: User): Promise<ResetPasswordToken> {
         const tokenExists: ResetPasswordToken | null = await this.resetTokenRepository.findOneBy({ user });
         const FIVE_MINUTES: number = 5 * 60 * 1000;
-        if (tokenExists && new Date(tokenExists.updatedAt) < new Date(Date.now() - FIVE_MINUTES)) {
+        if (tokenExists && Date.now() - new Date(tokenExists.updatedAt).getTime() < FIVE_MINUTES) {
             throw new BadRequestException("You cannot resend the password reset email. Please wait 5 minutes")
         }
         const tokenCreated: string = this.jwtService.sign({
