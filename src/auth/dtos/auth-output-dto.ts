@@ -8,10 +8,14 @@ export class AuthOutputDto {
     public readonly user: UserOutputDto;
 
     @ApiProperty({example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImVtYWlsIjoiZmxvZmV5QHlhbmRleC5ydSIsImlhdCI6MTcyOTc4MjI1OCwiZXhwIjoxNzMwMzg3MDU4fQ.wkI8e_b2WwI4TkJ4qEMagzj_6rb6mC3cMBL4-nVtX5o"})
-    public readonly token: string;
+    public readonly accessToken: string;
 
-    constructor({user, token}: {user: User, token: string}) {
+    @ApiProperty({example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImVtYWlsIjoiZmxvZmV5QHlhbmRleC5ydSIsImlhdCI6MTcyOTc4MjI1OCwiZXhwIjoxNzMwMzg3MDU4fQ.wkI8e_b2WwI4TkJ4qEMagzj_6rb6mC3cMBL4-nVtX5o"})
+    public readonly refreshToken: string;
+
+    constructor({user, accessToken, refreshToken}: {user: User, accessToken: string, refreshToken: string}) {
         this.user = new UserOutputDto(user);
-        this.token = token;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

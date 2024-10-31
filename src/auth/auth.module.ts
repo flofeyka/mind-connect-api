@@ -7,11 +7,12 @@ import { TokenService } from "./token/token.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Token } from "./token/token.entity";
 import { AppModule } from "src/app.module";
+import { ResetPasswordToken } from "./token/resetPasswordToken.entity";
 
 @Module({
     imports: [
         forwardRef(() => AppModule),
-        TypeOrmModule.forFeature([Token]),
+        TypeOrmModule.forFeature([Token, ResetPasswordToken]),
         JwtModule.register({
             secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: '7d' },

@@ -5,11 +5,11 @@ import { ApiProperty } from "@nestjs/swagger";
 export class UserDto {
     @ApiProperty({title: "E-mail", example: "example@gmail.com"})
     @IsEmail()
-    public readonly email: string;
+    public readonly email?: string;
 
     @ApiProperty({title: "Name", example: "John"})
     @IsString()
-    public readonly firstName: string;
+    public readonly firstName?: string;
 
     @ApiProperty({title: "Surname", example: "Doe"})
     @IsString()

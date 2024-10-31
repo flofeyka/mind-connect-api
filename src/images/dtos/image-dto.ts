@@ -7,7 +7,6 @@ export class ImageDto {
     @ApiProperty({name: "path", description: "Image path", example: "https://mind-connect.ru/image/d2f5fff6-2df4-4761-a23a-e9f708655ee1.png"})
     public  path: string;
     constructor(model: Image) {
-        console.log(model);
         this.filename = model.filename;
         this.path = `${process.env.API_URL}/image/${model.filename}`;
     }
