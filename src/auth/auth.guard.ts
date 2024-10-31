@@ -9,8 +9,7 @@ export class AuthGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         try {
             const token = request.headers.authorization.split(" ")[1];
-            const payload: { _id: number, email: string } = await this.tokenService.verifyToken(token);
-            console.log(payload);
+            const payload: { _id: number, email: string } = await this.tokenService.verifyAccessToken(token);
 
             request.user = payload;
             return true;
