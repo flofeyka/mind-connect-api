@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn*.lock ./
 
-RUN yarn add
+RUN yarn install
 
 COPY . . 
 
@@ -21,7 +21,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn*.lock ./
 
-RUN yarn add --only=prod
+RUN yarn install --production
 
 COPY . .
 
