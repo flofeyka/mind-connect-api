@@ -1,14 +1,13 @@
 import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
 import { Image } from "src/images/images.entity";
 import { ImageService } from "src/images/images.service";
 import { InsertResult, Repository } from "typeorm";
 import { CreateUserDto } from "./dtos/CreateUserDto";
 import { EditUserDto } from "./dtos/EditUserDto";
-import { User } from "./entities/user.entity";
-import * as bcrypt from "bcrypt";
-import { UserDto } from "./dtos/UserDto";
 import { UserOutputDto } from "./dtos/UserOutputDto";
+import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
@@ -28,7 +27,6 @@ export class UserService {
 
             if (user.image) {
                 await this.imageService.deleteImage(user._id, user.image.filename);
-                // await this.userRepository.save({...user, image: null});
             }
 
             user.image = imageFound;
@@ -63,7 +61,6 @@ export class UserService {
         }
 
 
-        console.log(newPassword);
         const newPasswordCompared: boolean = await bcrypt.compare(newPassword, user.password);
         if (newPasswordCompared) {
             throw new BadRequestException("Old and new password should not be same");

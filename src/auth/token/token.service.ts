@@ -1,11 +1,10 @@
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Token } from "./token.entity";
-import { InsertResult, Repository } from "typeorm";
 import { User } from "src/user/entities/user.entity";
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { InsertResult, Repository } from "typeorm";
 import { ResetPasswordToken } from "./resetPasswordToken.entity";
-import { MailerService } from "@nestjs-modules/mailer";
+import { Token } from "./token.entity";
 
 @Injectable()
 export class TokenService {
@@ -78,10 +77,10 @@ export class TokenService {
 
     async generateResetPasswordToken(user: User): Promise<ResetPasswordToken> {
         const tokenExists: ResetPasswordToken | null = await this.resetTokenRepository.findOneBy({ user });
-        // const FIVE_MINUTES: number = 5 * 60 * 1000;
-        // if (tokenExists && new Date(tokenExists.updatedAt) < new Date(Date.now() - FIVE_MINUTES)) {
-        //     throw new BadRequestException("You cannot resend the password reset email. Please wait 5 minutes")
-        // }
+        const FIVE_MINUTES: number = 5 * 60 * 1000;
+        if (tokenExists && new Date(tokenExists.updatedAt) < new Date(Date.now() - FIVE_MINUTES)) {
+            throw new BadRequestException("You cannot resend the password reset email. Please wait 5 minutes")
+        }
         const tokenCreated: string = this.jwtService.sign({
             _id: user._id,
             email: user.email
@@ -107,5 +106,9 @@ export class TokenService {
                 user: true
             }
         })
+    }
+
+    async deleteResetPasswordToken(token: string) {
+        return (await this.resetTokenRepository.delete({token})).affected === 1;
     }
 }
