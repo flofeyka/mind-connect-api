@@ -1,12 +1,10 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res, UnauthorizedException } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { CreateUserDto } from "src/user/dtos/CreateUserDto";
-import { LoginDto } from "./dtos/login-dto";
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
-import { AuthOutputDto } from "./dtos/auth-output-dto";
+import { BadRequestException, Body, Controller, Delete, NotFoundException, Param, Post, Put, Query, Req, Res, UnauthorizedException } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Request, Response } from "express";
-import { RequestType } from "src/types/RequestType";
-import { Token } from "./token/token.entity";
+import { CreateUserDto } from "src/user/dtos/CreateUserDto";
+import { AuthService } from "./auth.service";
+import { AuthOutputDto } from "./dtos/auth-output-dto";
+import { LoginDto } from "./dtos/login-dto";
 import { ResetPasswordDto } from "./dtos/reset-password-dto";
 
 @ApiTags("Auth API")
@@ -35,6 +33,21 @@ export class AuthController {
     @Post("/sign-in")
     async signIn(@Body() userDto: LoginDto, @Res({ passthrough: true }) response: Response): Promise<AuthOutputDto> {
         const authData: AuthOutputDto = await this.authService.signIn(userDto);
+        response.cookie("refreshToken", authData.refreshToken, {
+            maxAge: 14 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: true
+        });
+
+        return authData;
+    }
+
+    @ApiOperation({ summary: "Refresh token and get user data"})
+    @ApiOkResponse({ type: AuthOutputDto })
+    @ApiBadRequestResponse({ example: new UnauthorizedException("Wrong refresh token").getResponse()})
+    @Post("/refresh")
+    async refreshToken(@Req() request: Request, @Res({passthrough: true}) response: Response): Promise<AuthOutputDto> {
+        const authData: AuthOutputDto = await this.authService.refreshToken(request.cookies?.refreshToken);
         response.cookie("refreshToken", authData.refreshToken, {
             maxAge: 14 * 24 * 60 * 60 * 1000,
             httpOnly: true,

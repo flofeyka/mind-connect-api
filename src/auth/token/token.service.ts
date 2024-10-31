@@ -60,6 +60,12 @@ export class TokenService {
         return verified;
     }
 
+    async findRefreshToken(refreshToken) {
+        return await this.tokenRepository.findOne({where: {token: refreshToken}, relations: {
+            user: true
+        }});
+    }
+
     verifyRefreshToken(refreshToken: string): { _id: number, email: string } {
         return this.jwtService.verify(refreshToken, {
             secret: process.env.JWT_REFRESH_SECRET
