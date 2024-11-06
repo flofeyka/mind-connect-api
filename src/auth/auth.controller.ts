@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, NotFoundException, Param, Post, Put, Query, Req, Res, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { CreateUserDto } from "src/user/dtos/CreateUserDto";
@@ -84,4 +84,14 @@ export class AuthController {
     resetPassword(@Param('token') token: string, @Body() { password }: ResetPasswordDto) {
         return this.authService.resetPassword(token, password);
     }
+
+    // @Get("/yandex/callback/:token")
+    // async yandexCallback(@Param('token') token: string) {
+    //     const {data} = await fetch(`https://login.yandex.ru/info?jwt_secret=55fe52e445bf412eaacb22064a6f60c1&format=json`, {
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`
+    //         }
+    //     }).then(res => res.json());
+    //     console.log(data);
+    // }
 };

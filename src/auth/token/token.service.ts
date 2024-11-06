@@ -60,7 +60,7 @@ export class TokenService {
         return verified;
     }
 
-    async findRefreshToken(refreshToken) {
+    async findRefreshToken(refreshToken: string) {
         return await this.tokenRepository.findOne({where: {token: refreshToken}, relations: {
             user: true
         }});

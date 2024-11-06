@@ -11,7 +11,7 @@ export class Image {
     public readonly filename: string;
 
     @ApiProperty({name: "user", description: "User", example: () => User})
-    @ManyToOne(() => User, {onUpdate: "CASCADE", cascade: true})
+    @ManyToOne(() => User, {onDelete: "CASCADE"})
     @JoinColumn()
     public readonly user: User;
 }

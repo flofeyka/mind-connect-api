@@ -63,13 +63,14 @@ describe("UserService", () => {
             firstName: "Danil",
             lastName: "Bashirov",
             email: "userDto@test.ru",
+            isDoctor: false,
             password: "12345678"
         }
 
-        expect(await service.createUser(dto)).toEqual({
+        expect(await service.createUser(dto)).toEqual(new UserOutputDto({
             _id: expect.any(Number),
             ...dto
-        })
+        } as User))
     });
 
     it("should find a user by id", async () => {

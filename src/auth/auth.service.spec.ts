@@ -112,6 +112,7 @@ describe("AuthService", () => {
             lastName: "Doe",
             email: "john.doe@gmail.com",
             phoneNumber: 123456789,
+            isDoctor: false,
             password: 'a'
         }
         expect(await service.signUp(userDto)).toEqual({
