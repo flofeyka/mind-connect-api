@@ -1,6 +1,5 @@
-import { IsEmail, IsNumber, IsString } from "class-validator";
-import { User } from "../entities/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsNumber, IsString } from "class-validator";
 
 export class UserDto {
     @ApiProperty({title: "E-mail", example: "example@gmail.com"})

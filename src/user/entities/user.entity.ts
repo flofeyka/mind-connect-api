@@ -21,6 +21,10 @@ export class User {
     @Column({unique: true})
     public email: string;
 
+    @ApiProperty({ title: "Is user a doctor? ", example: true})
+    @Column({default: false})
+    public isDoctor: boolean;
+
     @ApiProperty({title: "User Phone Number", example: "0909090909"})
     @Column({unique: true, nullable: true, type: "bigint"})
     public phoneNumber: number;

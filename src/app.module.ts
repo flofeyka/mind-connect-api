@@ -5,10 +5,12 @@ import { AuthModule } from './auth/auth.module';
 import { ImageModule } from './images/images.module';
 import { UserModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { CalendarModule } from './calendar/calendar.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      isGlobal: true
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
@@ -34,9 +36,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
-    forwardRef(() => ImageModule)
+    forwardRef(() => ImageModule),
+    forwardRef(() => CalendarModule)
   ],
   controllers: [],
   providers: [],
 })
+
 export class AppModule { }
