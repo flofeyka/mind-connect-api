@@ -1,34 +1,64 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Calendar } from "./calendar.entity";
-import { Repository } from "typeorm";
-import { CalendarNote } from "./notes/note.entity";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Calendar } from './calendar.entity';
+import { CalendarResponseDto } from './dtos/calendar-response-dto';
+import { User } from 'src/user/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CalendarService {
-    constructor(
-        @InjectRepository(Calendar) private readonly calendarRepository: Repository<Calendar>,
-        @InjectRepository(CalendarNote) private readonly noteRepository: Repository<CalendarNote>
-    ) {}
+  constructor(
+    @InjectRepository(Calendar)
+    private readonly calendarRepository: Repository<Calendar>,
+    private readonly userService: UserService,
+  ) {}
 
-    async addNote(userId: number, date: Date, time: Date, note: number) {
-        const calendars: Calendar[] = await this.calendarRepository.find({where: {user: {
-            _id: userId
-        }}});
+  async findOrCreateTodayCalendar(
+    userId: number,
+  ): Promise<CalendarResponseDto> {
+    const user: User = await this.userService.findUserById(userId);
+    const now: Date = new Date(Date.now());
 
-        let highestIndex = 0;
-        for (const calendar of calendars) {
-          if (calendar.index > highestIndex) {
-            highestIndex = calendar.index;
-          }
-        }
+    const today: number = new Date(now).getUTCDate();
+    const currentMonth: number = new Date(now).getUTCMonth();
+    const currentYear: number = new Date(now).getUTCFullYear();
 
-        const calendarFound: Calendar = calendars.find((calendar: Calendar) => calendar.date === date);
-        if(!calendarFound) {
-            throw new NotFoundException(`Calendar with this date ${date} is not found`)
-        }
-        calendarFound.index = highestIndex + 1;
-        
+    const currentCalendar: Calendar = await this.calendarRepository.findOne({
+      where: {
+        user: {
+          _id: user._id,
+        },
+        date: new Date(currentYear, currentMonth, today),
+      },
+    });
 
-    }
-};
+    const calendarSaved: Calendar = await this.calendarRepository.save({
+      ...currentCalendar,
+      user,
+      date: new Date(currentYear, currentMonth, today),
+    });
+
+    return new CalendarResponseDto({ success: true, calendar: calendarSaved });
+  }
+
+  async setStatus(
+    calendar: Calendar,
+    status: number,
+  ): Promise<CalendarResponseDto> {
+    calendar.status = status;
+    const calendarSaved: Calendar =
+      await this.calendarRepository.save(calendar);
+
+    return new CalendarResponseDto({ success: true, calendar: calendarSaved });
+  }
+
+  public async findCalendar(_id: number): Promise<Calendar> {
+    return await this.calendarRepository.findOne({
+      where: { _id },
+      relations: {
+        user: true,
+      },
+    });
+  }
+}

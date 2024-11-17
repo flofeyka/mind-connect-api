@@ -1,17 +1,26 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Calendar } from "../calendar.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Calendar } from '../calendar.entity';
 
-@Entity({name: "calendar-notes"})
+@Entity({ name: 'calendar-notes' })
 export class CalendarNote {
-    @PrimaryGeneratedColumn()
-    public _id: number;
+  @PrimaryGeneratedColumn()
+  public _id: number;
 
-    @ManyToOne(() => Calendar, {onDelete: "CASCADE"})
-    public calendar: Calendar;
+  @ManyToOne((): typeof Calendar => Calendar, { onDelete: 'CASCADE' })
+  public calendar: Calendar;
 
-    @Column()
-    public time: Date;
+  @Column()
+  public time: Date;
 
-    @CreateDateColumn()
-    public createdAt: Date;
+  @Column({ nullable: true })
+  public note: string;
+
+  @CreateDateColumn()
+  public createdAt: Date;
 }
