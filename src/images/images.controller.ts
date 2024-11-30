@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
-import { RequestType } from 'src/types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ImageDto } from './dtos/image-dto';
 

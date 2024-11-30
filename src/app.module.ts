@@ -6,6 +6,7 @@ import { ImageModule } from './images/images.module';
 import { UserModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CalendarModule } from './calendar/calendar.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -36,9 +37,10 @@ import { CalendarModule } from './calendar/calendar.module';
       },
     }),
     forwardRef((): typeof UserModule => UserModule),
-    forwardRef((): typeof AuthModule => AuthModule),
+    AuthModule,
     forwardRef((): typeof ImageModule => ImageModule),
     forwardRef((): typeof CalendarModule => CalendarModule),
+    PostModule
   ],
   controllers: [],
   providers: [],

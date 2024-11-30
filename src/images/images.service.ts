@@ -19,7 +19,7 @@ export class ImageService {
     private readonly imageRepository: Repository<Image>,
     @Inject(forwardRef((): typeof UserService => UserService))
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async uploadImages(userId: number, filenames: string[]): Promise<ImageDto[]> {
     const user: User = await this.userService.findUserById(userId);

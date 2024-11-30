@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   NotFoundException,
+  Param,
   Post,
   Put,
   Req,
@@ -18,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CalendarGuard } from '../calendar.guard';
-import { RequestType } from 'src/types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { NoteDto } from './dtos/note-dto';
 import { NoteGuard } from './note.guard';
 import { UpdateNoteDto } from './dtos/update-note-dto';
@@ -28,7 +31,7 @@ import { UpdateNoteDto } from './dtos/update-note-dto';
 @ApiBearerAuth()
 @Controller('/calendar/note')
 export class NoteController {
-  constructor(private readonly noteService: NoteService) {}
+  constructor(private readonly noteService: NoteService) { }
 
   @ApiOperation({ summary: 'Create a note' })
   @ApiOkResponse({ type: NoteDto })
@@ -60,5 +63,35 @@ export class NoteController {
     @Req() request: RequestType,
   ): Promise<NoteDto> {
     return this.noteService.updateNote(request.note, noteDto.note);
+  }
+
+  @ApiOperation({ summary: "Delete the note" })
+  @ApiOkResponse({
+    example: {
+      success: true,
+      message: "Note is successfully deleted"
+    }
+  })
+  @ApiNotFoundResponse({
+    example: new NotFoundException('Note not found').getResponse(),
+  })
+  @Delete("/:id")
+  @UseGuards(AuthGuard, NoteGuard)
+  deleteNote(@Req() request: RequestType): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    return this.noteService.deleteNote(request.note)
+  }
+
+  @ApiOperation({ summary: "Get note by id" })
+  @ApiOkResponse({ type: NoteDto })
+  @ApiNotFoundResponse({
+    example: new NotFoundException('Note not found').getResponse(),
+  })
+  @Get("/:id")
+  @UseGuards(NoteGuard)
+  getNote(@Req() request: RequestType): NoteDto {
+    return this.noteService.getUserNote(request.note);
   }
 }

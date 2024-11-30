@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { RequestType } from '../../types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { CalendarNote } from './note.entity';
 import { NoteService } from './note.service';
 
