@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   NotFoundException,
   Param,
   Post,
@@ -11,7 +10,7 @@ import {
   Query,
   Req,
   Res,
-  UnauthorizedException,
+  UnauthorizedException
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -31,7 +30,7 @@ import { ResetPasswordDto } from './dtos/reset-password-dto';
 @ApiTags('Auth API')
 @Controller('/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @ApiOperation({ summary: 'Sign up' })
   @ApiOkResponse({ type: AuthOutputDto })

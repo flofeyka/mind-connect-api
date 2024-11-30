@@ -21,7 +21,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
     private readonly mailerService: MailerService,
-  ) {}
+  ) { }
 
   async signUp(createUserDto: CreateUserDto): Promise<AuthOutputDto> {
     const userExisted: User | null = await this.userService.findUserByEmail(

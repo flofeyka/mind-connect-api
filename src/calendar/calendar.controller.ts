@@ -16,7 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestType } from 'src/types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { CalendarResponseDto } from './dtos/calendar-response-dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CalendarGuard } from './calendar.guard';

@@ -1,14 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppModule } from 'src/app.module';
+import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserModule } from 'src/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
-import { TokenService } from './token/token.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Token } from './token/token.entity';
-import { AppModule } from 'src/app.module';
 import { ResetPasswordToken } from './token/ResetPasswordToken.entity';
-import { AuthGuard } from './auth.guard';
+import { Token } from './token/token.entity';
+import { TokenService } from './token/token.service';
 
 @Module({
   imports: [
@@ -24,4 +23,4 @@ import { AuthGuard } from './auth.guard';
   providers: [AuthService, TokenService],
   exports: [TokenService],
 })
-export class AuthModule {}
+export class AuthModule { }

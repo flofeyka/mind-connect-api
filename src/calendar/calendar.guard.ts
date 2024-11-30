@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { RequestType } from 'src/types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { Calendar } from './calendar.entity';
 import { CalendarService } from './calendar.service';
 
