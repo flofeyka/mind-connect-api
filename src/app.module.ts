@@ -6,14 +6,15 @@ import { ImageModule } from './images/images.module';
 import { UserModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CalendarModule } from './calendar/calendar.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: "postgres",
+      type: 'postgres',
       host: process.env.PGHOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.PGUSER,
@@ -22,25 +23,24 @@ import { CalendarModule } from './calendar/calendar.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       ssl: {
-        rejectUnauthorized: false 
-      }
+        rejectUnauthorized: false,
+      },
     }),
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
         auth: {
           user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD
-        }
-      }
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
     }),
-    forwardRef(() => UserModule),
-    forwardRef(() => AuthModule),
-    forwardRef(() => ImageModule),
-    forwardRef(() => CalendarModule)
+    forwardRef((): typeof UserModule => UserModule),
+    forwardRef((): typeof AuthModule => AuthModule),
+    forwardRef((): typeof ImageModule => ImageModule),
+    forwardRef((): typeof CalendarModule => CalendarModule),
   ],
   controllers: [],
   providers: [],
 })
-
-export class AppModule { }
+export class AppModule {}
