@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
-import { RequestType } from 'src/types/RequestType';
+import { RequestType } from 'types/RequestType';
 import { EditUserDto } from './dtos/EditUserDto';
 import {
   ApiBearerAuth,

@@ -66,8 +66,16 @@ export class UserService {
     });
   }
 
-  async findUserById(_id: number): Promise<User | null> {
-    return await this.userRepository.findOneBy({ _id });
+  async findUserById(_id: number, relations?: [{key: string}]): Promise<User | null> {
+    const relationOptions = relations?.reduce((acc, rel) => ({
+      ...acc,
+      [rel.key]: true,
+    }), {});
+    
+    return await this.userRepository.findOne({
+      where: { _id },
+      relations: relationOptions || undefined,
+    });
   }
 
   async findUserByEmail(email: string): Promise<User | null> {

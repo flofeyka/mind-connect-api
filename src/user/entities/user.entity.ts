@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Image } from 'src/images/images.entity';
+import { Post } from 'src/post/entities/post.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -38,6 +40,10 @@ export class User {
   @OneToOne((): typeof Image => Image, { eager: true, onDelete: 'SET NULL' })
   @JoinColumn()
   public image: Image;
+
+  @ApiProperty({ title: "User posts", type: (): typeof Post => Post})
+  @OneToMany((): typeof Post => Post, (post: Post) => post.user)
+  public posts: Post[];
 
   @ApiProperty({ title: 'User Password', example: 'hashed' })
   @Column()
