@@ -10,6 +10,7 @@ RUN yarn install
 COPY . . 
 
 RUN yarn run build
+COPY .env .env.development ./
 
 FROM node:18-alpine AS production
 
@@ -24,7 +25,9 @@ COPY yarn*.lock ./
 RUN yarn install --production
 
 COPY . .
+COPY .env .env.development ./
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node", "dist/main"]
+EXPOSE 3000
+CMD ["npm", "run", "start:prod"]
