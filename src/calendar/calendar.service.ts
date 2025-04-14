@@ -5,6 +5,7 @@ import { Calendar } from './calendar.entity';
 import { CalendarResponseDto } from './dtos/calendar-response-dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { CalendarDto } from './dtos/calendar-dto';
 
 @Injectable()
 export class CalendarService {
@@ -40,6 +41,16 @@ export class CalendarService {
     });
 
     return new CalendarResponseDto({ success: true, calendar: calendarSaved });
+  }
+
+  async getCalendars(user_id: number): Promise<CalendarDto[]> {
+    const calendars: Calendar[] = await this.calendarRepository.find({
+      where: {
+        user: { id: user_id },
+      },
+    });
+
+    return calendars.map((calendar: Calendar) => new CalendarDto(calendar));
   }
 
   async setStatus(

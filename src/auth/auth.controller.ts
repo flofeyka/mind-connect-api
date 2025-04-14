@@ -26,6 +26,7 @@ import { AuthService } from './auth.service';
 import { AuthOutputDto } from './dtos/auth-output-dto';
 import { LoginDto } from './dtos/login-dto';
 import { ResetPasswordDto } from './dtos/reset-password-dto';
+import { RefreshTokenDto } from './dtos/refresh-token-dto';
 
 @ApiTags('Auth API')
 @Controller('/auth')
@@ -81,11 +82,11 @@ export class AuthController {
   })
   @Post('/refresh')
   async refreshToken(
-    @Req() request: Request,
+    @Body() dto: RefreshTokenDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthOutputDto> {
     const authData: AuthOutputDto = await this.authService.refreshToken(
-      request.cookies?.refreshToken,
+      dto.refreshToken,
     );
     response.cookie('refreshToken', authData.refreshToken, {
       maxAge: 14 * 24 * 60 * 60 * 1000,
