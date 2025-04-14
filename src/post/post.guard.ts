@@ -15,7 +15,7 @@ export class PostGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: RequestType = context.switchToHttp().getRequest();
-    const _id: any =
+    const id: any =
       request.params.post_id ||
       request.body.post_id ||
       request.params.id ||
@@ -23,7 +23,7 @@ export class PostGuard implements CanActivate {
       request.query.id;
     const userId: number = request.user.id;
 
-    const post: Post = await this.postService.findPost(_id);
+    const post: Post = await this.postService.findPost(id);
     if (!post) {
       throw new NotFoundException('Post not found');
     }

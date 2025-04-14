@@ -5,7 +5,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGenerate
 @Entity({name: "reset_password_tokens"})
 export class ResetPasswordToken {
     @PrimaryGeneratedColumn('uuid')
-    public readonly _id: UUID
+    public readonly id: UUID
 
     @OneToOne(() => User)
     @JoinColumn()
