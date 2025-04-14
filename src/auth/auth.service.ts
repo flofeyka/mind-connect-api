@@ -39,7 +39,7 @@ export class AuthService {
       password,
     });
     const { refreshToken, accessToken } = this.tokenService.generateTokens({
-      _id: userCreated.id,
+      id: userCreated.id,
       email: userCreated.email,
     });
     await this.tokenService.saveToken(refreshToken);
@@ -70,7 +70,7 @@ export class AuthService {
       accessToken: string;
       refreshToken: string;
     } = this.tokenService.generateTokens({
-      _id: userExisted.id,
+      id: userExisted.id,
       email: userExisted.email,
     });
     await this.tokenService.saveToken(refreshToken);
@@ -85,7 +85,7 @@ export class AuthService {
       throw new UnauthorizedException('Wrong refresh token');
     }
     const { accessToken, refreshToken } = this.tokenService.generateTokens({
-      _id: tokenData.user.id,
+      id: tokenData.user.id,
       email: tokenData.user.email,
     });
     await this.tokenService.saveToken(refreshToken);

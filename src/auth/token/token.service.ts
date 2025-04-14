@@ -49,7 +49,7 @@ export class TokenService {
     return tokenUpdateResult.token;
   }
 
-  generateTokens(payload: { _id: number; email: string }): {
+  generateTokens(payload: { id: number; email: string }): {
     accessToken: string;
     refreshToken: string;
   } {
@@ -123,7 +123,7 @@ export class TokenService {
     }
     const tokenCreated: string = this.jwtService.sign(
       {
-        _id: user.id,
+        id: user.id,
         email: user.email,
       },
       {

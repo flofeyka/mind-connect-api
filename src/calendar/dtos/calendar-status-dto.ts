@@ -4,7 +4,7 @@ import { IsNumber, Max, Min } from 'class-validator';
 export class CalendarStatusDto {
   @IsNumber()
   @ApiProperty({ title: 'Айди календаря', example: 1 })
-  public _id: number;
+  public id: number;
 
   @IsNumber()
   @Min(0)
