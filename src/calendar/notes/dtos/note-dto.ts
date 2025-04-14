@@ -3,7 +3,7 @@ import { CalendarNote } from '../note.entity';
 
 export class NoteDto {
   @ApiProperty({ title: 'Идентификатор заметки', example: 1 })
-  public _id: number;
+  public id: number;
 
   @ApiProperty({ title: 'Идентификатор календаря', example: 1 })
   public calendarId: number;
@@ -15,7 +15,7 @@ export class NoteDto {
   public note: string;
 
   constructor(note: CalendarNote, calendarId: number) {
-    this._id = note._id;
+    this.id = note.id;
     this.calendarId = calendarId;
     this.time =
       new Date(note.time).getHours() + ':' + new Date(note.time).getMinutes();

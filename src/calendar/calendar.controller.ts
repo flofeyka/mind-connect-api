@@ -49,7 +49,7 @@ export class CalendarController {
   findOrCreateTodayCalendar(
     @Request() request: RequestType,
   ): Promise<CalendarResponseDto> {
-    return this.calendarService.findOrCreateTodayCalendar(request.user._id);
+    return this.calendarService.findOrCreateTodayCalendar(request.user.id);
   }
 
   @ApiOperation({ summary: 'Setting your well-being' })

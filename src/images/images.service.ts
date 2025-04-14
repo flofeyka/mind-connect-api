@@ -19,7 +19,7 @@ export class ImageService {
     private readonly imageRepository: Repository<Image>,
     @Inject(forwardRef((): typeof UserService => UserService))
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async uploadImages(userId: number, filenames: string[]): Promise<ImageDto[]> {
     const user: User = await this.userService.findUserById(userId);
@@ -43,7 +43,7 @@ export class ImageService {
   async deleteImage(userId: number, filename: string): Promise<boolean> {
     const imageDeletedResult: DeleteResult = await this.imageRepository.delete({
       user: {
-        _id: userId,
+        id: userId,
       },
       filename,
     });

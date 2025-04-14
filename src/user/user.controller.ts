@@ -35,7 +35,7 @@ export class UserController {
   @Get('/')
   @UseGuards(AuthGuard)
   async getUserData(@Req() req: RequestType): Promise<UserOutputDto> {
-    const userData: User = await this.userService.findUserById(req.user._id);
+    const userData: User = await this.userService.findUserById(req.user.id);
     return new UserOutputDto(userData);
   }
 
@@ -52,6 +52,6 @@ export class UserController {
     @Req() req: RequestType,
     @Body() userDto: EditUserDto,
   ): Promise<UserOutputDto> {
-    return this.userService.editUser(req.user._id, userDto);
+    return this.userService.editUser(req.user.id, userDto);
   }
 }

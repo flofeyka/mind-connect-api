@@ -10,7 +10,7 @@ import { Calendar } from '../calendar.entity';
 @Entity({ name: 'calendar-notes' })
 export class CalendarNote {
   @PrimaryGeneratedColumn()
-  public _id: number;
+  public id: number;
 
   @ManyToOne((): typeof Calendar => Calendar, { onDelete: 'CASCADE' })
   public calendar: Calendar;

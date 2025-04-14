@@ -7,6 +7,10 @@ import { UserModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CalendarModule } from './calendar/calendar.module';
 import { PostModule } from './post/post.module';
+import { ChatModule } from './chat/chat.module';
+import { AuthGuard } from './auth/auth.guard';
+import { TokenService } from './auth/token/token.service';
+import { GigachatModule } from './gigachat/gigachat.module';
 
 @Module({
   imports: [
@@ -17,15 +21,15 @@ import { PostModule } from './post/post.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.PGHOST,
-      port: parseInt(process.env.DB_PORT),
+      port: parseInt(process.env.PGPORT),
       username: process.env.PGUSER,
       password: process.env.PGPASSWORD,
       database: process.env.PGDATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      // ssl: {
+      //   rejectUnauthorized: false,
+      // },
     }),
     MailerModule.forRoot({
       transport: {
@@ -36,13 +40,16 @@ import { PostModule } from './post/post.module';
         },
       },
     }),
-    forwardRef((): typeof UserModule => UserModule),
+    UserModule,
     AuthModule,
-    forwardRef((): typeof ImageModule => ImageModule),
-    forwardRef((): typeof CalendarModule => CalendarModule),
-    PostModule
+    ImageModule,
+    CalendarModule,
+    PostModule,
+    ChatModule,
+    GigachatModule,
   ],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class AppModule {}

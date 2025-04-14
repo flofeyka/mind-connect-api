@@ -20,11 +20,11 @@ export class NoteGuard implements CanActivate {
       const note_id: number =
         request.body.note_id |
         Number(request.params.note_id) |
-        request.body._id |
-        Number(request.params._id);
+        request.body.id |
+        Number(request.params.id);
 
       const noteFound: CalendarNote = await this.noteService.findNote(note_id);
-      if (!noteFound || noteFound.calendar.user._id !== request.user._id) {
+      if (!noteFound || noteFound.calendar.user.id !== request.user.id) {
         throw new NotFoundException('Note not found');
       }
 

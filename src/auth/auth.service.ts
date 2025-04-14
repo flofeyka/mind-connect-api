@@ -21,7 +21,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
     private readonly mailerService: MailerService,
-  ) { }
+  ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<AuthOutputDto> {
     const userExisted: User | null = await this.userService.findUserByEmail(
@@ -39,7 +39,7 @@ export class AuthService {
       password,
     });
     const { refreshToken, accessToken } = this.tokenService.generateTokens({
-      _id: userCreated._id,
+      _id: userCreated.id,
       email: userCreated.email,
     });
     await this.tokenService.saveToken(refreshToken);
@@ -70,7 +70,7 @@ export class AuthService {
       accessToken: string;
       refreshToken: string;
     } = this.tokenService.generateTokens({
-      _id: userExisted._id,
+      _id: userExisted.id,
       email: userExisted.email,
     });
     await this.tokenService.saveToken(refreshToken);
@@ -85,7 +85,7 @@ export class AuthService {
       throw new UnauthorizedException('Wrong refresh token');
     }
     const { accessToken, refreshToken } = this.tokenService.generateTokens({
-      _id: tokenData.user._id,
+      _id: tokenData.user.id,
       email: tokenData.user.email,
     });
     await this.tokenService.saveToken(refreshToken);
@@ -136,7 +136,7 @@ export class AuthService {
       throw new BadRequestException('Link is expired');
     }
 
-    await this.userService.changePassword(tokenFound.user._id, password);
+    await this.userService.changePassword(tokenFound.user.id, password);
     await this.tokenService.deleteResetPasswordToken(tokenFound.token);
 
     return true;

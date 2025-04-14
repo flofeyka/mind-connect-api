@@ -12,12 +12,12 @@ export class NoteService {
     @InjectRepository(CalendarNote)
     private readonly noteRepository: Repository<CalendarNote>,
     private readonly calendarService: CalendarService,
-  ) { }
+  ) {}
 
   public async findNote(noteId: number): Promise<CalendarNote> {
     return await this.noteRepository.findOne({
       where: {
-        _id: noteId,
+        id: noteId,
       },
       relations: {
         calendar: {
@@ -28,7 +28,7 @@ export class NoteService {
   }
 
   getUserNote(calendarNote: CalendarNote): NoteDto {
-    return new NoteDto(calendarNote, calendarNote.calendar._id)
+    return new NoteDto(calendarNote, calendarNote.calendar.id);
   }
 
   async createNote(
@@ -42,7 +42,7 @@ export class NoteService {
       note,
     });
 
-    return new NoteDto(noteCreated, calendar._id);
+    return new NoteDto(noteCreated, calendar.id);
   }
 
   async updateNote(calendarNote: CalendarNote, note: string): Promise<NoteDto> {
@@ -50,7 +50,7 @@ export class NoteService {
     const noteUpdated: CalendarNote =
       await this.noteRepository.save(calendarNote);
 
-    return new NoteDto(noteUpdated, calendarNote.calendar._id);
+    return new NoteDto(noteUpdated, calendarNote.calendar.id);
   }
 
   async deleteNote(calendarNode: CalendarNote): Promise<{
@@ -58,16 +58,16 @@ export class NoteService {
     message: string;
   }> {
     const deletedResult: DeleteResult = await this.noteRepository.delete({
-      _id: calendarNode._id
+      id: calendarNode.id,
     });
 
     if (deletedResult.affected !== 1) {
-      throw new BadGatewayException("Cannot delete this note");
+      throw new BadGatewayException('Cannot delete this note');
     }
 
     return {
       success: true,
-      message: "Note is successfully deleted"
+      message: 'Note is successfully deleted',
     };
   }
 }
