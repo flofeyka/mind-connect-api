@@ -24,10 +24,10 @@ export class UserService {
   ) {}
 
   public async editUser(
-    _id: number,
+    id: number,
     userDto: EditUserDto,
   ): Promise<UserOutputDto> {
-    const user: User = await this.userRepository.findOneBy({ _id });
+    const user: User = await this.userRepository.findOneBy({ id });
 
     if (userDto.image) {
       const imageFound: Image = await this.imageService.findImage(
@@ -38,7 +38,7 @@ export class UserService {
       }
 
       if (user.image) {
-        await this.imageService.deleteImage(user._id, user.image.filename);
+        await this.imageService.deleteImage(user.id, user.image.filename);
       }
 
       user.image = imageFound;
@@ -62,18 +62,24 @@ export class UserService {
       .execute();
 
     return await this.userRepository.findOneBy({
-      _id: userInsertResult.identifiers[0]._id,
+      id: userInsertResult.identifiers[0].id,
     });
   }
 
-  async findUserById(_id: number, relations?: [{key: string}]): Promise<User | null> {
-    const relationOptions = relations?.reduce((acc, rel) => ({
-      ...acc,
-      [rel.key]: true,
-    }), {});
-    
+  async findUserById(
+    id: number,
+    relations?: [{ key: string }],
+  ): Promise<User | null> {
+    const relationOptions = relations?.reduce(
+      (acc, rel) => ({
+        ...acc,
+        [rel.key]: true,
+      }),
+      {},
+    );
+
     return await this.userRepository.findOne({
-      where: { _id },
+      where: { id },
       relations: relationOptions || undefined,
     });
   }

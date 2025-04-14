@@ -11,7 +11,7 @@ import { CalendarNote } from './notes/note.entity';
 @Entity({ name: 'calendars' })
 export class Calendar {
   @PrimaryGeneratedColumn()
-  public _id: number;
+  public id: number;
 
   @ManyToOne((): typeof User => User)
   public user: User;

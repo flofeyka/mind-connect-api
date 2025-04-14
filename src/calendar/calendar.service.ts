@@ -27,7 +27,7 @@ export class CalendarService {
     const currentCalendar: Calendar = await this.calendarRepository.findOne({
       where: {
         user: {
-          _id: user._id,
+          id: user.id,
         },
         date: new Date(currentYear, currentMonth, today),
       },
@@ -53,9 +53,9 @@ export class CalendarService {
     return new CalendarResponseDto({ success: true, calendar: calendarSaved });
   }
 
-  public async findCalendar(_id: number): Promise<Calendar> {
+  public async findCalendar(id: number): Promise<Calendar> {
     return await this.calendarRepository.findOne({
-      where: { _id },
+      where: { id },
       relations: {
         user: true,
       },

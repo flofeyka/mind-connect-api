@@ -5,10 +5,10 @@ import { CalendarNote } from '../notes/note.entity';
 
 export class CalendarDto {
   @ApiProperty({ title: 'Идентификатор календаря', example: 1 })
-  public _id: number;
+  public id: number;
 
-  @ApiProperty({ title: 'Дата', example: '10 ноября' })
-  public date: string;
+  @ApiProperty({ title: 'Дата' })
+  public date: Date;
 
   @ApiProperty({
     title: 'Самочувствие человека на этот день',
@@ -20,15 +20,12 @@ export class CalendarDto {
   public notes: NoteDto[];
 
   constructor(calendar: Calendar) {
-    this._id = calendar._id;
+    this.id = calendar.id;
     this.status = calendar.status;
-    this.date =
-      new Date(calendar.date).getDate() +
-      ' ' +
-      (new Date(calendar.date).getMonth() + 1);
+    this.date = new Date(calendar.date);
     this.notes =
       calendar.notes?.map(
-        (note: CalendarNote) => new NoteDto(note, calendar._id),
+        (note: CalendarNote) => new NoteDto(note, calendar.id),
       ) || [];
   }
 }

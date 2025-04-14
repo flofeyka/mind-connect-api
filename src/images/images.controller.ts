@@ -23,8 +23,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
-} from "@nestjs/swagger";
+  ApiTags,
+} from '@nestjs/swagger';
 import { ImageService } from './images.service';
 import { Request, Response } from 'express';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -107,7 +107,7 @@ export class ImageController {
     @Req() request: RequestType,
   ): Promise<ImageDto[]> {
     return this.imagesService.uploadImages(
-      request.user._id,
+      request.user.id,
       files.map((file: Express.Multer.File): string => file.filename),
     );
   }
@@ -121,6 +121,6 @@ export class ImageController {
     @Param('filename') filename: string,
     @Req() request: RequestType,
   ): Promise<boolean> {
-    return this.imagesService.deleteImage(request.user._id, filename);
+    return this.imagesService.deleteImage(request.user.id, filename);
   }
 }

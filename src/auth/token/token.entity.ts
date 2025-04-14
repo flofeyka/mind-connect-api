@@ -11,7 +11,7 @@ import {
 @Entity({ name: 'users_tokens' })
 export class Token {
   @PrimaryGeneratedColumn('uuid')
-  public readonly _id: UUID;
+  public readonly id: UUID;
 
   @Column()
   public token: string;

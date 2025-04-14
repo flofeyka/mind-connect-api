@@ -14,7 +14,7 @@ import {
 export class User {
   @ApiProperty({ title: 'User ID', example: 1 })
   @PrimaryGeneratedColumn()
-  public _id: number;
+  public id: number;
 
   @ApiProperty({ title: 'User First Name', example: 'John' })
   @Column()
@@ -41,7 +41,7 @@ export class User {
   @JoinColumn()
   public image: Image;
 
-  @ApiProperty({ title: "User posts", type: (): typeof Post => Post})
+  @ApiProperty({ title: 'User posts', type: (): typeof Post => Post })
   @OneToMany((): typeof Post => Post, (post: Post) => post.user)
   public posts: Post[];
 
