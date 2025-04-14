@@ -21,6 +21,7 @@ import { CalendarResponseDto } from './dtos/calendar-response-dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CalendarGuard } from './calendar.guard';
 import { CalendarStatusDto } from './dtos/calendar-status-dto';
+import { CalendarDto } from './dtos/calendar-dto';
 
 @ApiTags('Calendar API')
 @ApiBearerAuth()
@@ -50,6 +51,14 @@ export class CalendarController {
     @Request() request: RequestType,
   ): Promise<CalendarResponseDto> {
     return this.calendarService.findOrCreateTodayCalendar(request.user.id);
+  }
+
+  @ApiOperation({ summary: 'Get calendars' })
+  @ApiOkResponse({ type: [CalendarDto] })
+  @UseGuards(AuthGuard)
+  @Get('/all')
+  getCalendars(@Request() request: RequestType): Promise<CalendarDto[]> {
+    return this.calendarService.getCalendars(request.user.id);
   }
 
   @ApiOperation({ summary: 'Setting your well-being' })
