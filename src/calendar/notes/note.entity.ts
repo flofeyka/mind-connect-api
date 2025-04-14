@@ -15,9 +15,6 @@ export class CalendarNote {
   @ManyToOne((): typeof Calendar => Calendar, { onDelete: 'CASCADE' })
   public calendar: Calendar;
 
-  @Column()
-  public time: Date;
-
   @Column({ nullable: true })
   public note: string;
 
