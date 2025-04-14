@@ -7,18 +7,17 @@ export class NoteDto {
 
   @ApiProperty({ title: 'Идентификатор календаря', example: 1 })
   public calendarId: number;
-
-  @ApiProperty({ title: 'Время', example: '14:50' })
-  public time: string;
-
+  
   @ApiProperty({ title: 'Note value', example: 'Around this day i felt good' })
   public note: string;
+
+  @ApiProperty({ title: 'Время', example: '14:50' })
+  public createdAt: Date;
 
   constructor(note: CalendarNote, calendarId: number) {
     this.id = note.id;
     this.calendarId = calendarId;
-    this.time =
-      new Date(note.time).getHours() + ':' + new Date(note.time).getMinutes();
+    this.createdAt = note.createdAt;
     this.note = note.note;
   }
 }
