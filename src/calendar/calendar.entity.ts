@@ -1,6 +1,7 @@
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -19,9 +20,6 @@ export class Calendar {
   @Column({ nullable: true })
   public status: number;
 
-  @Column()
-  public date: Date;
-
   @OneToMany(
     (): typeof CalendarNote => CalendarNote,
     (note: CalendarNote) => note.calendar,
@@ -31,4 +29,7 @@ export class Calendar {
     },
   )
   public notes: CalendarNote[];
+
+  @CreateDateColumn()
+  public createdAt: Date;
 }
