@@ -51,7 +51,10 @@ export class CalendarService {
     const calendars: Calendar[] = await this.calendarRepository.find({
       where: {
         user: { id: user_id },
-        date: Between(start_date, end_date),
+        date: Between(
+          new Date(start_date),
+          new Date(end_date)
+        ),
       },
     });
 
