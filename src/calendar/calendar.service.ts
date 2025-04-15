@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Calendar } from './calendar.entity';
 import { CalendarResponseDto } from './dtos/calendar-response-dto';
 import { User } from 'src/user/entities/user.entity';
@@ -43,10 +43,15 @@ export class CalendarService {
     return new CalendarResponseDto({ success: true, calendar: calendarSaved });
   }
 
-  async getCalendars(user_id: number): Promise<CalendarDto[]> {
+  async getCalendarsByDates(
+    user_id: number,
+    start_date: Date,
+    end_date: Date,
+  ): Promise<CalendarDto[]> {
     const calendars: Calendar[] = await this.calendarRepository.find({
       where: {
         user: { id: user_id },
+        date: Between(start_date, end_date),
       },
     });
 
