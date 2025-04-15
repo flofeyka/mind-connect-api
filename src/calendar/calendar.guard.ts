@@ -24,6 +24,10 @@ export class CalendarGuard implements CanActivate {
         request.params.id ||
         request.query.id;
 
+      if (!calendar_id) {
+        throw new BadRequestException('Calendar not found');
+      }
+
       const calendarFound: Calendar =
         await this.calendarService.findCalendar(calendar_id);
 
