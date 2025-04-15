@@ -30,7 +30,9 @@ export class CalendarService {
         user: {
           id: user.id,
         },
-        date: new Date(currentYear, currentMonth, today),
+      },
+      order: {
+        createdAt: 'DESC',
       },
     });
 
@@ -51,7 +53,7 @@ export class CalendarService {
     const calendars: Calendar[] = await this.calendarRepository.find({
       where: {
         user: { id: user_id },
-        date: Between(
+        createdAt: Between(
           new Date(start_date),
           new Date(end_date)
         ),
