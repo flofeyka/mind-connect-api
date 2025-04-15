@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Post,
+  Query,
   Req,
   Request,
   UseGuards,
@@ -56,9 +57,13 @@ export class CalendarController {
   @ApiOperation({ summary: 'Get calendars' })
   @ApiOkResponse({ type: [CalendarDto] })
   @UseGuards(AuthGuard)
-  @Get('/all')
-  getCalendars(@Request() request: RequestType): Promise<CalendarDto[]> {
-    return this.calendarService.getCalendars(request.user.id);
+  @Get('/all/by-dates')
+  getCalendarsByDates(
+    @Request() request: RequestType,
+    @Query('start_date') start_date: Date,
+    @Query('end_date') end_date: Date,
+  ): Promise<CalendarDto[]> {
+    return this.calendarService.getCalendarsByDates(request.user.id, start_date, end_date);
   }
 
   @ApiOperation({ summary: 'Setting your well-being' })
