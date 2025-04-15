@@ -61,7 +61,7 @@ export class CalendarController {
   @Get('/all/by-dates')
   getCalendarsByDates(
     @Request() request: RequestType,
-    @Body() dto: GetCalendarsDto,
+    @Query() dto: GetCalendarsDto,
   ): Promise<CalendarDto[]> {
     return this.calendarService.getCalendarsByDates(request.user.id, dto.start_date, dto.end_date);
   }
