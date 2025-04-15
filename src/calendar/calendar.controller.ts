@@ -23,6 +23,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CalendarGuard } from './calendar.guard';
 import { CalendarStatusDto } from './dtos/calendar-status-dto';
 import { CalendarDto } from './dtos/calendar-dto';
+import { GetCalendarsDto } from './notes/dtos/get-calendars-dto';
 
 @ApiTags('Calendar API')
 @ApiBearerAuth()
@@ -60,10 +61,9 @@ export class CalendarController {
   @Get('/all/by-dates')
   getCalendarsByDates(
     @Request() request: RequestType,
-    @Query('start_date') start_date: Date,
-    @Query('end_date') end_date: Date,
+    @Body() dto: GetCalendarsDto,
   ): Promise<CalendarDto[]> {
-    return this.calendarService.getCalendarsByDates(request.user.id, start_date, end_date);
+    return this.calendarService.getCalendarsByDates(request.user.id, dto.start_date, dto.end_date);
   }
 
   @ApiOperation({ summary: 'Setting your well-being' })
