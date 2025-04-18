@@ -23,6 +23,7 @@ import {
 import { User } from './entities/user.entity';
 import { UserOutputDto } from './dtos/UserOutputDto';
 import { UserDto } from './dtos/UserDto';
+import { SearchDoctorDto } from './dtos/search-doctor-dto';
 
 @ApiTags('User API')
 @Controller('/user')
@@ -37,6 +38,14 @@ export class UserController {
   async getUserData(@Req() req: RequestType): Promise<UserOutputDto> {
     const userData: User = await this.userService.findUserById(req.user.id);
     return new UserOutputDto(userData);
+  }
+
+  @ApiOperation({ summary: 'Get doctor list' })
+  @ApiResponse({ status: 200, type: [UserOutputDto] })
+  @Get('/doctors')
+  @UseGuards(AuthGuard)
+  async getDoctors(@Body() dto: SearchDoctorDto) {
+    return await this.userService.getDoctors(dto);
   }
 
   @ApiOperation({ summary: 'Update user data' })

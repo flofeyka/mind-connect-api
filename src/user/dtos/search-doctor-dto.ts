@@ -1,31 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiOperation, ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
+  IsArray,
   IsEnum,
-  IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
 } from 'class-validator';
 import { Gender, Language, Problem } from '../entities/user.entity';
 
-export class UserDto {
-  @ApiProperty({ title: 'E-mail', example: 'example@gmail.com' })
-  @IsEmail()
-  public readonly email: string;
-
-  @ApiProperty({ title: 'Name', example: 'John' })
-  @IsString()
-  public readonly firstName: string;
-
-  @ApiProperty({ title: 'Surname', example: 'Doe' })
-  @IsString()
-  public readonly lastName: string;
-
-  @ApiProperty({ title: 'Phone number', example: '89999999999' })
-  @IsOptional()
-  @IsNumber()
-  public readonly phoneNumber: number;
-
+export class SearchDoctorDto {
   @ApiProperty({ title: 'Doctor gender', enum: Gender, enumName: 'Gender' })
   @IsOptional()
   @IsEnum(Gender)
@@ -73,5 +56,10 @@ export class UserDto {
   })
   @IsOptional()
   @IsEnum(Problem, { each: true })
-  problems: Problem[];
+  problems?: Problem[];
+
+  @ApiProperty({ title: 'Search string', example: 'Danil Bashirov' })
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

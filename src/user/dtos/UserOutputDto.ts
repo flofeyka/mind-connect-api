@@ -1,5 +1,5 @@
 import { ImageDto } from 'src/images/dtos/image-dto';
-import { User } from '../entities/user.entity';
+import { Gender, Language, Problem, User } from '../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserOutputDto {
@@ -16,6 +16,49 @@ export class UserOutputDto {
   @ApiProperty({ type: ImageDto })
   public readonly image: ImageDto;
 
+  @ApiProperty({ title: 'Doctor gender', enum: Gender, enumName: 'Gender' })
+  gender?: Gender;
+
+  @ApiProperty({
+    title: 'Languages',
+    enum: Language,
+    example: [
+      Language.CHINESE,
+      Language.ENGLISH,
+      Language.GERMAN,
+      Language.HINDI,
+      Language.RUSSIAN,
+      Language.RUSSIAN,
+      Language.SPANISH,
+      Language.UKRAINIAN,
+    ],
+  })
+  languages?: Language[];
+
+  @ApiProperty({
+    title: 'Problems',
+    enum: Problem,
+    example: [
+      Problem.ADHD,
+      Problem.ALCOHOL_USE_DISORDER,
+      Problem.BIPOLAR_DISORDER,
+      Problem.BURNOUT,
+      Problem.DEPENDENT_PERSONALITY_DISORDER,
+      Problem.GAMBLING_DISORDER,
+      Problem.GENDER_DYSPHORIA,
+      Problem.GENERALIZED_ANXIETY_DISORDER_GAD,
+      Problem.MAJOR_DEPRESSIVE_DISORDER,
+      Problem.PANIC_DISORDER,
+      Problem.POST_TRAUMATIC_STRESS_DISORDER_PTSD,
+      Problem.SCHIZOAFFECTIVE_DISORDER,
+      Problem.SOCIAL_ANXIETY_DISORDER,
+      Problem.SPECIFIC_PHOBIAS,
+      Problem.STRESS,
+      Problem.SUBSTANCE_USE_DISORDERS,
+    ],
+  })
+  problems: Problem[];
+
   constructor(user: User) {
     this.id = user.id;
     // this.email = user.email;
@@ -23,5 +66,8 @@ export class UserOutputDto {
     this.lastName = user.lastName;
     // this.phoneNumber = user?.phoneNumber;
     this.image = user.image ? new ImageDto(user.image) : null;
+    this.gender = user.gender;
+    this.problems = user.problems;
+    this.languages = user.languages;
   }
 }
