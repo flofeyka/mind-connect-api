@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateDialogDto {
   @IsString()
@@ -7,6 +7,7 @@ export class CreateDialogDto {
   title: string;
 
   @IsString()
+  @IsOptional()
   @ApiProperty({
     title: 'Фотография(Название)',
     example: 'gsdfg-4q5gksfd-543gfs-2fdf.png',
