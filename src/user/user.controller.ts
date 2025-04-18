@@ -3,7 +3,10 @@ import {
   Controller,
   Get,
   NotFoundException,
+  Patch,
+  Post,
   Put,
+  Query,
   Req,
   Request,
   UseGuards,
@@ -42,9 +45,9 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get doctor list' })
   @ApiResponse({ status: 200, type: [UserOutputDto] })
-  @Get('/doctors')
+  @Post('/doctors')
   @UseGuards(AuthGuard)
-  async getDoctors(@Body() dto: SearchDoctorDto) {
+  async getDoctors(@Query() dto: SearchDoctorDto) {
     return await this.userService.getDoctors(dto);
   }
 
