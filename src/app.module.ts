@@ -27,9 +27,9 @@ import { GigachatModule } from './gigachat/gigachat.module';
       database: process.env.PGDATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      // ssl: {
-      //   rejectUnauthorized: false,
-      // },
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     MailerModule.forRoot({
       transport: {
