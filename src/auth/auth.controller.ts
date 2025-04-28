@@ -104,11 +104,11 @@ export class AuthController {
   })
   @Delete('/logout')
   async logout(
-    @Req() request: Request,
+    @Body() dto: RefreshTokenDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<boolean> {
     const logoutData: boolean = await this.authService.logout(
-      request.cookies?.refreshToken,
+      dto.refreshToken,
     );
     response.clearCookie('refreshToken');
     return logoutData;
