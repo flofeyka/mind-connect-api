@@ -5,13 +5,10 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn, RelationCount,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserDto } from '../dtos/UserDto';
 import { UserSubscription } from './user-subscription.entity';
 
 export enum Gender {

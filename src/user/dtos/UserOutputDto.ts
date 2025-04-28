@@ -60,10 +60,10 @@ export class UserOutputDto {
   problems: Problem[];
 
   @ApiProperty({ title: 'subscriptions count', example: 2 })
-  subscriptions: UserOutputDto[];
+  subscriptions?: UserOutputDto[];
 
   @ApiProperty({ title: 'followers count', example: 3 })
-  followers: UserOutputDto[];
+  followers?: UserOutputDto[];
 
   constructor(user: User) {
     this.id = user.id;
@@ -75,6 +75,11 @@ export class UserOutputDto {
     this.gender = user.gender;
     this.problems = user.problems;
     this.languages = user.languages;
-
+    this.subscriptions = user.subscriptions?.map(
+      (sub) => new UserOutputDto(sub.subscribedTo),
+    );
+    this.followers = user.followers?.map(
+      (sub) => new UserOutputDto(sub.subscriber),
+    );
   }
 }

@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Image } from 'src/images/images.entity';
 import { ImageService } from 'src/images/images.service';
-import { InsertResult, Or, Repository } from 'typeorm';
+import { InsertResult, Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/CreateUserDto';
 import { EditUserDto } from './dtos/EditUserDto';
 import { UserOutputDto } from './dtos/UserOutputDto';
@@ -72,7 +72,7 @@ export class UserService {
 
   async findUserById(
     id: number,
-    relations?: [{ key: string }],
+    relations?: { key: string }[],
   ): Promise<User | null> {
     const relationOptions = relations?.reduce(
       (acc, rel) => ({
@@ -89,10 +89,13 @@ export class UserService {
   }
 
   public async findUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { email }, relations: {
-      followers: true,
-        subscriptions: true
-      } });
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: {
+        followers: true,
+        subscriptions: true,
+      },
+    });
   }
 
   async getDoctors(dto: SearchDoctorDto): Promise<UserOutputDto[]> {
@@ -113,6 +116,10 @@ export class UserService {
 
     const query = this.userRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.followers', 'followers') // подтягиваем связи followers
+      .leftJoinAndSelect('followers.subscriber', 'followerSubscriber') // подтягиваем у каждого follower его subscriber
+      .leftJoinAndSelect('user.subscriptions', 'subscriptions') // подтягиваем связи subscriptions
+      .leftJoinAndSelect('subscriptions.subscribedTo', 'subscribedTo')
       .where('user.isDoctor = :isDoctor', { isDoctor: true });
 
     // Поиск по имени/фамилии с улучшенной логикой
@@ -155,6 +162,8 @@ export class UserService {
     }
 
     const users = await query.getMany();
+
+    console.log(users);
     return users.map((user) => new UserOutputDto(user));
   }
 
@@ -195,8 +204,12 @@ export class UserService {
       throw new Error('You cannot follow yourself');
     }
 
-    const subscriber = await this.userRepository.findOneBy({ id: subscriberId });
-    const subscribedTo = await this.userRepository.findOneBy({ id: subscribedToId });
+    const subscriber = await this.userRepository.findOneBy({
+      id: subscriberId,
+    });
+    const subscribedTo = await this.userRepository.findOneBy({
+      id: subscribedToId,
+    });
 
     if (!subscriber || !subscribedTo) {
       throw new Error('User not found');
@@ -240,17 +253,38 @@ export class UserService {
     return { message: `User ${subscriberId} unfollowed ${subscribedToId}` };
   }
 
-  async getFollowers(userId: number): Promise<number> {
-    const count: number = await this.userSubscriptionRepository.count({
-      where: { subscribedTo: { id: userId } },
+  async getFollowers(userId: number): Promise<UserOutputDto[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: {
+        followers: {
+          subscriber: true,
+        },
+      },
     });
-    return count;
+    return user.followers.map((user) => new UserOutputDto(user.subscriber));
   }
 
-  async getSubscriptions(userId: number): Promise<number> {
-    const count: number = await this.userSubscriptionRepository.count({
-      where: { subscriber: { id: userId } },
+  async getSubscriptions(userId: number): Promise<UserOutputDto[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: {
+        subscriptions: {
+          subscribedTo: true,
+        },
+      },
     });
-    return count;
+    return user.subscriptions.map(
+      (user) => new UserOutputDto(user.subscribedTo),
+    );
+  }
+
+  async getProfile(id: number): Promise<UserOutputDto> {
+    const user = await this.findUserById(id, [
+      { key: 'subscriptions' },
+      { key: 'followers' },
+    ]);
+
+    return new UserOutputDto(user);
   }
 }
