@@ -4,12 +4,10 @@ import {
   Get,
   NotFoundException,
   Param,
-  Patch,
   Post,
   Put,
   Query,
   Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -27,7 +25,6 @@ import {
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { UserOutputDto } from './dtos/UserOutputDto';
-import { UserDto } from './dtos/UserDto';
 import { SearchDoctorDto } from './dtos/search-doctor-dto';
 
 @ApiTags('User API')
@@ -38,7 +35,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get user data' })
-  @ApiResponse({ status: 200, type: UserOutputDto })
+  @ApiResponse({
+    status: 200,
+    type: UserOutputDto,
+  })
   @Get('/')
   async getUserData(@Req() req: RequestType): Promise<UserOutputDto> {
     const userData: User = await this.userService.findUserById(req.user.id);
@@ -46,7 +46,10 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get doctor list' })
-  @ApiResponse({ status: 200, type: [UserOutputDto] })
+  @ApiResponse({
+    status: 200,
+    type: [UserOutputDto],
+  })
   @Post('/doctors')
   async getDoctors(@Query() dto: SearchDoctorDto) {
     return await this.userService.getDoctors(dto);
@@ -69,7 +72,10 @@ export class UserController {
 
   @Post('follow/:id')
   @ApiOperation({ summary: 'Follow a user' })
-  @ApiParam({ name: 'id', description: 'ID of the user to follow' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the user to follow',
+  })
   @ApiResponse({
     status: 200,
     schema: { example: { message: 'Successfully followed' } },
@@ -82,7 +88,10 @@ export class UserController {
 
   @Post('unfollow/:id')
   @ApiOperation({ summary: 'Unfollow a user' })
-  @ApiParam({ name: 'id', description: 'ID of the user to unfollow' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the user to unfollow',
+  })
   @ApiResponse({
     status: 200,
     schema: { example: { message: 'Successfully followed' } },
@@ -95,25 +104,42 @@ export class UserController {
 
   @Get(':id/followers')
   @ApiOperation({ summary: 'Get followers of a user' })
-  @ApiParam({ name: 'id', description: 'ID of the user' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the user',
+  })
   @ApiResponse({
     status: 200,
     type: [UserOutputDto],
     description: 'List of followers',
   })
-  async getFollowers(@Param('id') id: number): Promise<number> {
+  async getFollowers(@Param('id') id: number): Promise<UserOutputDto[]> {
     return await this.userService.getFollowers(id);
   }
 
   @Get(':id/subscriptions')
   @ApiOperation({ summary: 'Get subscriptions of a user' })
-  @ApiParam({ name: 'id', description: 'ID of the user' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the user',
+  })
   @ApiResponse({
     status: 200,
     type: [UserOutputDto],
     description: 'List of subscriptions',
   })
-  async getSubscriptions(@Param('id') id: number): Promise<number> {
+  async getSubscriptions(@Param('id') id: number): Promise<UserOutputDto[]> {
     return await this.userService.getSubscriptions(id);
+  }
+
+  @Get('/profile/:id')
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiParam({
+    name: 'id',
+    description: 'Id of user',
+  })
+  @ApiResponse({ status: 200, type: UserOutputDto })
+  async getProfile(@Param('id') id: string) {
+    return await this.userService.getProfile(Number(id));
   }
 }

@@ -6,9 +6,15 @@ export class UserSubscription {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.subscriptions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.subscriptions, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   subscriber: User;
 
-  @ManyToOne(() => User, (user) => user.followers, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.followers, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   subscribedTo: User;
 }
