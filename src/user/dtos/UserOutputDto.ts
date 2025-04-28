@@ -59,6 +59,12 @@ export class UserOutputDto {
   })
   problems: Problem[];
 
+  @ApiProperty({ title: 'subscriptions count', example: 2 })
+  subscriptions: UserOutputDto[];
+
+  @ApiProperty({ title: 'followers count', example: 3 })
+  followers: UserOutputDto[];
+
   constructor(user: User) {
     this.id = user.id;
     // this.email = user.email;
@@ -69,5 +75,6 @@ export class UserOutputDto {
     this.gender = user.gender;
     this.problems = user.problems;
     this.languages = user.languages;
+
   }
 }
