@@ -5,10 +5,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn, RelationCount,
 } from 'typeorm';
+import { UserDto } from '../dtos/UserDto';
+import { UserSubscription } from './user-subscription.entity';
 
 export enum Gender {
   MALE = 'MALE',
@@ -95,10 +99,20 @@ export class User {
   })
   public problems: Problem[];
 
-  @ApiProperty({ title: 'Problems', example: '' })
   @ApiProperty({ title: 'User Phone Number', example: '0909090909' })
   @Column({ unique: true, nullable: true, type: 'bigint' })
   public phoneNumber: number;
+
+  @ApiProperty({ title: 'Subscribtions', type: [User] })
+  @OneToMany(() => UserSubscription, (subscription) => subscription.subscriber)
+  subscriptions: UserSubscription[];
+
+  @ApiProperty({ title: 'Followers', type: [User] })
+  @OneToMany(
+    () => UserSubscription,
+    (subscription) => subscription.subscribedTo,
+  )
+  followers: UserSubscription[];
 
   @ApiProperty({ title: 'User avatar', type: (): typeof Image => Image })
   @OneToOne((): typeof Image => Image, { eager: true, onDelete: 'SET NULL' })

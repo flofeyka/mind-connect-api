@@ -15,11 +15,14 @@ import { EditUserDto } from './dtos/EditUserDto';
 import { UserOutputDto } from './dtos/UserOutputDto';
 import { User } from './entities/user.entity';
 import { SearchDoctorDto } from './dtos/search-doctor-dto';
+import { UserSubscription } from './entities/user-subscription.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserSubscription)
+    private readonly userSubscriptionRepository: Repository<UserSubscription>,
     @Inject(forwardRef((): typeof ImageService => ImageService))
     private readonly imageService: ImageService,
   ) {}
@@ -86,7 +89,10 @@ export class UserService {
   }
 
   public async findUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email });
+    return await this.userRepository.findOne({ where: { email }, relations: {
+      followers: true,
+        subscriptions: true
+      } });
   }
 
   async getDoctors(dto: SearchDoctorDto): Promise<UserOutputDto[]> {
@@ -182,5 +188,69 @@ export class UserService {
     const userSaved: User = await this.userRepository.save(user);
 
     return new UserOutputDto(userSaved);
+  }
+
+  async follow(subscriberId: number, subscribedToId: number) {
+    if (subscriberId === subscribedToId) {
+      throw new Error('You cannot follow yourself');
+    }
+
+    const subscriber = await this.userRepository.findOneBy({ id: subscriberId });
+    const subscribedTo = await this.userRepository.findOneBy({ id: subscribedToId });
+
+    if (!subscriber || !subscribedTo) {
+      throw new Error('User not found');
+    }
+
+    const existingSubscription = await this.userSubscriptionRepository.findOne({
+      where: {
+        subscriber: { id: subscriberId },
+        subscribedTo: { id: subscribedToId },
+      },
+    });
+
+    if (existingSubscription) {
+      throw new Error('Already subscribed');
+    }
+
+    const subscription = this.userSubscriptionRepository.create({
+      subscriber,
+      subscribedTo,
+    });
+
+    await this.userSubscriptionRepository.save(subscription);
+
+    return { message: `User ${subscriberId} followed ${subscribedToId}` };
+  }
+
+  async unfollow(subscriberId: number, subscribedToId: number) {
+    const subscription = await this.userSubscriptionRepository.findOne({
+      where: {
+        subscriber: { id: subscriberId },
+        subscribedTo: { id: subscribedToId },
+      },
+    });
+
+    if (!subscription) {
+      throw new Error('Subscription not found');
+    }
+
+    await this.userSubscriptionRepository.remove(subscription);
+
+    return { message: `User ${subscriberId} unfollowed ${subscribedToId}` };
+  }
+
+  async getFollowers(userId: number): Promise<number> {
+    const count: number = await this.userSubscriptionRepository.count({
+      where: { subscribedTo: { id: userId } },
+    });
+    return count;
+  }
+
+  async getSubscriptions(userId: number): Promise<number> {
+    const count: number = await this.userSubscriptionRepository.count({
+      where: { subscriber: { id: userId } },
+    });
+    return count;
   }
 }
