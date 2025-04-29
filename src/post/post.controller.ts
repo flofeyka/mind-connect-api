@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   NotFoundException,
+  Param,
   Post,
   Put,
   Req,
@@ -32,9 +33,9 @@ export class PostController {
   @ApiOperation({ summary: 'Get user posts' })
   @ApiOkResponse({ type: [PostOutputDto] })
   @UseGuards(AuthGuard)
-  @Get('/')
-  getUserPosts(@Req() request: RequestType) {
-    return this.postService.getUserPosts(request.user.id);
+  @Get('/:id')
+  getUserPosts(@Param('id') id: string) {
+    return this.postService.getUserPosts(Number(id));
   }
 
   @ApiOperation({ summary: 'Create a post' })
